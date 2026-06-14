@@ -185,3 +185,41 @@ function calculateResult() {
 function updateResult() {
   document.getElementById("result").value = currentExpression || "0";
 }
+
+// ===============================
+// 🏋️ 1RM (One-Rep Max) Calculator
+// ===============================
+
+function calculate1RM() {
+  var weight = parseFloat(document.getElementById("orm-weight").value);
+  var reps = parseInt(document.getElementById("orm-reps").value, 10);
+
+  if (isNaN(weight) || isNaN(reps) || weight <= 0 || reps <= 0) {
+    return;
+  }
+
+  // Epley formula: 1RM = weight * (1 + reps/30)
+  var oneRepMax = Math.round(weight * (1 + reps / 30) * 10) / 10;
+
+  document.getElementById("orm-value").textContent = oneRepMax;
+  document.getElementById("orm-result").style.display = "block";
+
+  var zones = [
+    { pct: 95, label: "Max Strength", color: "#dc3545" },
+    { pct: 90, label: "Heavy", color: "#fd7e14" },
+    { pct: 80, label: "Hypertrophy", color: "#ffc107" },
+    { pct: 70, label: "Endurance", color: "#20c997" },
+    { pct: 60, label: "Warm-up", color: "#0d6efd" }
+  ];
+
+  var html = "";
+  for (var i = 0; i < zones.length; i++) {
+    var zone = zones[i];
+    var zoneWeight = Math.round(oneRepMax * zone.pct / 10);
+    html += "<div class=\"d-flex justify-content-between align-items-center p-2 mb-1 rounded\" style=\"background: " + zone.color + "11; border-left: 3px solid " + zone.color + ";\">";
+    html += "<div><span class=\"fw-bold\" style=\"color: " + zone.color + ";\">" + zone.pct + "%</span> <span class=\"text-muted small\">" + zone.label + "</span></div>";
+    html += "<span class=\"fw-bold\">" + zoneWeight + " kg</span>";
+    html += "</div>";
+  }
+  document.getElementById("orm-zones").innerHTML = html;
+}
